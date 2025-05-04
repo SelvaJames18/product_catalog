@@ -1,1 +1,1 @@
-web: gunicorn product_catlog.wsgi:application
+web: gunicorn mysite.wsgi:application
