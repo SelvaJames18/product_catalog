@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 SECRET_KEY = 'your-secret-key'
 DEBUG = True  # Set to False in production
-ALLOWED_HOSTS = ['.onrender.com']  # Add your domain here
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.onrender.com']
 
 # Installed apps
 INSTALLED_APPS = [
