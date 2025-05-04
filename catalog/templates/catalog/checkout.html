@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+      font-size: 2rem;
+    }
+
+    form {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      padding: 14px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    @media screen and (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      form {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      button[type="submit"] {
+        font-size: 1em;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Checkout</h1>
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" required />
+    </p>
+    <p>
+      <label for="address">Address:</label>
+      <textarea name="address" id="address" required></textarea>
+    </p>
+    <p>
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" required />
+    </p>
+
+    <!-- Hidden field to store cart data -->
+    <input type="hidden" name="cart_data" id="cart-data" />
+    <button type="submit">Place Order</button>
+  </form>
+
+  <script>
+    document.querySelector("form").addEventListener("submit", function () {
+      const cart = localStorage.getItem("cart");
+      document.getElementById("cart-data").value = cart;
+    });
+  </script>
+</body>
+</html>
