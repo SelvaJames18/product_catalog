@@ -14,6 +14,7 @@ class Order(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     address = models.TextField()
+    phone = models.CharField(max_length=15, null=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 

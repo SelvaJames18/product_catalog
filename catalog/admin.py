@@ -14,9 +14,9 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'email', 'address', 'total_price_display', 'product_list_display', 'created_at']
+    list_display = ['id', 'name', 'phone', 'email', 'address', 'total_price_display', 'product_list_display', 'created_at']
     inlines = [OrderItemInline]
-    readonly_fields = ['name', 'email', 'address', 'total_price', 'created_at']
+    readonly_fields = ['name', 'email', 'address', 'phone', 'total_price', 'created_at']
 
     def total_price_display(self, obj):
         return f"₹{obj.total_price:.2f}"

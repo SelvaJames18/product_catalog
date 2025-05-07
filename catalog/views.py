@@ -50,7 +50,8 @@ def checkout(request):
             name=name,
             email=email,
             address=address,
-            total_price=grand_total
+            total_price=grand_total,
+            phone=phone
         )
 
         for item in cart:
@@ -86,7 +87,8 @@ def send_order_confirmation_email(order):
         'name': order.name,
         'email': order.email,
         'address': order.address,
-        'total_price': order.total_price
+        'total_price': order.total_price,
+        'phone': order.phone,
     }
     email_body = render_to_string('order_confirm.html', context)
     send_mail(
