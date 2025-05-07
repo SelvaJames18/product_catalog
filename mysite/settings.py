@@ -5,7 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
-SECRET_KEY = 'your-secret-key'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')  # Get secret key from environment variable for security
 DEBUG = True  # Set to False in production
 ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1']
 
@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'catalog',
+    'catalog',  # Your app
 ]
 
 # Middleware
@@ -39,8 +39,11 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
+         'DIRS': [
+            BASE_DIR / 'templates',  # Add this if you have a global templates directory
+            BASE_DIR / 'catalog/templates',  # Add the app's template directory if it's not there
+        ],
+        'APP_DIRS': True,  # App-level templates will be found automatically
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -74,25 +77,27 @@ USE_TZ = True
 
 # Static files (CSS, JS, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # For dev
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')    # For collectstatic (production)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Assuming 'static' folder is inside the project directory
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # For collectstatic in production
+
+# Media files (images, uploads, etc.)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Your media directory
 
 # Whitenoise for serving static files in production
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Media files (if using images or uploads)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email settings (if using order email notifications)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'  # Or your email provider
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-email@example.com'         # Replace with your email
-EMAIL_HOST_PASSWORD = 'your-app-password'          # Replace with your app password
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-ADMIN_EMAIL = 'admin-receive@example.com'          # Where admin receives order notifications
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your_email@example.com')  # Use environment variables
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your_email_password')  # Use environment variables
+
+

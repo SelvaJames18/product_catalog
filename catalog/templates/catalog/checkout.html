@@ -1,125 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-      margin: 0;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #333;
-      font-size: 2rem;
-    }
-
-    form {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    p {
-      margin-bottom: 20px;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 6px;
-      color: #555;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1em;
-      box-sizing: border-box;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    button[type="submit"] {
-      width: 100%;
-      background-color: #28a745;
-      color: white;
-      padding: 14px;
-      font-size: 1.1em;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button[type="submit"]:hover {
-      background-color: #218838;
-    }
-
-    @media screen and (max-width: 600px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
       body {
-        padding: 10px;
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f6f8;
+        color: #333;
+        line-height: 1.6;
+        padding: 40px 20px;
       }
-
-      form {
-        padding: 20px;
-      }
-
+      
       h1 {
-        font-size: 1.5rem;
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+        color: #333;
       }
-
-      button[type="submit"] {
-        font-size: 1em;
-        padding: 12px;
+      
+      .container-1 {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
       }
-    }
-  </style>
-</head>
-
-<body>
-  <h1>Checkout</h1>
-  <form method="post">
-    {% csrf_token %}
-    <p>
-      <label for="name">Name:</label>
-      <input type="text" name="name" id="name" required />
-    </p>
-    <p>
-      <label for="address">Address:</label>
-      <textarea name="address" id="address" required></textarea>
-    </p>
-    <p>
-      <label for="email">Email:</label>
-      <input type="email" name="email" id="email" required />
-    </p>
-
-    <!-- Hidden field to store cart data -->
-    <input type="hidden" name="cart_data" id="cart-data" />
-    <button type="submit">Place Order</button>
-  </form>
-
-  <script>
-    document.querySelector("form").addEventListener("submit", function () {
-      const cart = localStorage.getItem("cart");
-      document.getElementById("cart-data").value = cart;
-    });
-  </script>
-</body>
+      
+      .cart-summary,
+      form {
+        background-color: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        min-width: 320px;
+        max-width: 600px;
+      }
+      
+      h2 {
+        font-size: 1.75rem;
+        margin-bottom: 15px;
+        color: #333;
+      }
+      
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid #e1e1e1;
+        font-size: 1rem;
+      }
+      
+      .cart-item:last-child {
+        border-bottom: none;
+      }
+      
+      .total {
+        font-weight: bold;
+        text-align: right;
+        margin-top: 20px;
+        font-size: 1.25rem;
+      }
+      
+      label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #555;
+        display: block;
+        margin-bottom: 8px;
+      }
+      
+      input[type='text'],
+      input[type='email'],
+      textarea {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 20px;
+        transition: border-color 0.3s ease;
+      }
+      
+      input[type='text']:focus,
+      input[type='email']:focus,
+      textarea:focus {
+        border-color: #28a745;
+        outline: none;
+      }
+      
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+      
+      button[type='submit'] {
+        width: 100%;
+        padding: 16px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        letter-spacing: 1px;
+      }
+      
+      button[type='submit']:hover {
+        background-color: #218838;
+      }
+      
+      .note {
+        font-size: 0.9rem;
+        color: #777;
+        text-align: center;
+        margin-top: 20px;
+      }
+      
+      @media screen and (max-width: 768px) {
+        body {
+          padding: 20px;
+        }
+      
+        .container-1 {
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+        }
+      
+        form,
+        .cart-summary {
+          padding: 20px;
+          width: 100%;
+        }
+      
+        h1 {
+          font-size: 2rem;
+        }
+      
+        button[type='submit'] {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Checkout</h1>
+    <div class="container-1">
+      <div class="cart-summary">
+        <h2>Order Summary</h2>
+  
+        {% for item in cart %}
+          <div class="cart-item">
+            <span>{{ item.name }}</span>
+            <span>₹{{ item.price }} × {{ item.quantity }}</span>
+          </div>
+        {% endfor %}
+  
+        <div class="cart-item">
+          <span>Subtotal</span>
+          <span>₹{{ total_price }}</span>
+        </div>
+  
+        <div class="cart-item">
+          <span>Delivery Fee</span>
+          <span>₹{{ delivery_fee }}</span>
+        </div>
+  
+        <div class="total">
+          <span>Total Charge: ₹{{ grand_total }}</span>
+        </div>
+      </div>
+  
+      <form method="post">
+        {% csrf_token %}
+        <p>
+          <label for="name">Full Name</label>
+          <input type="text" name="name" id="name" required />
+        </p>
+        <p>
+          <label for="address">Shipping Address</label>
+          <textarea name="address" id="address" required></textarea>
+        </p>
+        <p>
+          <label for="phone">Phone Number</label>
+          <input type="text" name="phone" id="phone" required />
+        </p>
+        <p>
+          <label for="email">Email Address</label>
+          <input type="email" name="email" id="email" required />
+        </p>
+        <button type="submit">Place Order</button>
+        <div class="note">
+          <p>Your order details will be sent to the admin after placing the order.</p>
+        </div>
+      </form>
+    </div>
+  </body>
 </html>

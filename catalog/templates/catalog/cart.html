@@ -72,6 +72,7 @@
             width: 100%;
             max-width: 300px;
             margin: 20px auto;
+            cursor: pointer;
         }
 
         .checkout-btn:hover {
@@ -120,27 +121,29 @@
     <h1>Your Cart</h1>
 
     <div class="cart-items" id="cart-items"></div>
-
     <div class="cart-total" id="cart-total"></div>
-    <a href="{% url 'checkout' %}" class="checkout-btn" id="checkout-btn">Proceed to Checkout</a>
 
-    <a href="/" class="continue-shopping" style="font-size: 1.2em; color: #007bff; text-decoration: none;">Continue Shopping</a>
+    <!-- Button that sends cart to Django and redirects -->
+    <button onclick="transferCartToSession()" class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+
+    <a href="/products" class="continue-shopping" style="font-size: 1.2em; color: #007bff; text-decoration: none;">Continue Shopping</a>
 
     <script>
-        // Function to display cart contents
+        const placeholderImage = "{% static 'images/placeholder.png' %}";
+
         function displayCart() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartItemsContainer = document.getElementById('cart-items');
             const cartTotalContainer = document.getElementById('cart-total');
-            const checkoutBtn = document.getElementById('checkout-btn'); // get the checkout button
+            const checkoutBtn = document.getElementById('checkout-btn');
 
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
                 cartTotalContainer.innerHTML = '';
-                if (checkoutBtn) checkoutBtn.style.display = 'none'; // Hide button if cart empty
+                if (checkoutBtn) checkoutBtn.style.display = 'none';
                 return;
             } else {
-                if (checkoutBtn) checkoutBtn.style.display = 'block'; // Show button if cart not empty
+                if (checkoutBtn) checkoutBtn.style.display = 'block';
             }
 
             let totalPrice = 0;
@@ -150,17 +153,18 @@
                 const itemTotal = item.price * item.quantity;
                 totalPrice += itemTotal;
 
-                const imageSrc = item.image || 'https://via.placeholder.com/100x80?text=No+Image';
+                const imageSrc = item.image || placeholderImage;
 
                 cartItemsContainer.innerHTML += `
                     <div class="cart-item">
+                        <img src="${imageSrc}" alt="${item.name}" />
                         <div class="cart-item-info">
                             <h3>${item.name}</h3>
                             <p>Price: ₹${item.price}</p>
                             <div class="quantity-control">
                                 <button onclick="updateQuantity(${index}, 'decrease')">-</button>
                                 <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, 'input', this.value)" />
-                                <button class="increase-btn" data-index="${index}">+</button>
+                                <button onclick="updateQuantity(${index}, 'increase')">+</button>
                             </div>
                             <p>Total: ₹${itemTotal}</p>
                         </div>
@@ -174,27 +178,16 @@
             cartTotalContainer.innerHTML = `<strong>Total Price: ₹${totalPrice}</strong>`;
         }
 
-        // Function to remove an item from the cart
         function removeFromCart(index) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart.splice(index, 1); // Remove the item at the specified index
+            cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
-            displayCart(); // Re-render the cart
+            displayCart();
         }
 
-        // Function to update item quantity
         function updateQuantity(index, action, inputValue) {
-            const buttons = document.querySelectorAll('.increase-btn');
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = this.getAttribute('data-index');
-                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    cart[index].quantity += 1;
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    displayCart();
-                });
-            });
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
             if (action === 'increase') {
                 cart[index].quantity += 1;
             } else if (action === 'decrease') {
@@ -204,11 +197,47 @@
             } else if (action === 'input') {
                 cart[index].quantity = parseInt(inputValue);
             }
+
             localStorage.setItem('cart', JSON.stringify(cart));
-            displayCart(); // Re-render the cart
+            displayCart();
         }
 
-        // Call displayCart function when the page loads
+        // CSRF token helper
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Transfer localStorage cart to Django session
+        function transferCartToSession() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            fetch('/save-cart/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ cart: cart })
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/checkout/';
+                } else {
+                    alert('Error transferring cart. Please try again.');
+                }
+            });
+        }
+
         window.onload = displayCart;
     </script>
 </body>
