@@ -54,7 +54,7 @@ Start the development server.
 
 ## Screenshots
 – Home page with a welcome message or introduction to the shop
-![screencapture-product-catlog-onrender-2025-05-08-13_45_19](https://github.com/user-attachments/assets/f40f05cb-c247-4f6c-ad36-82002d94817e)
+![screencapture-product-catlog-onrender-2025-05-08-13_45_19](https://github.com/user-attachments/assets/7acbf36f-c1e8-412f-90ce-c6b3a12d7c66)
 
 – Product section displaying all available products with images, prices, and categories
 ![screencapture-product-catlog-onrender-products-2025-05-08-13_45_39](https://github.com/user-attachments/assets/7c5a3ab5-5451-491d-bd16-4479788cbd7e)
