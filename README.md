@@ -92,4 +92,4 @@ Start the development server.
 
 Check out the live demo of the project at the following link:
 
-[Live Demo](https://product-catlog.onrender.com/)
+[Live Demo](https://product-catalog-4d7x.onrender.com)
