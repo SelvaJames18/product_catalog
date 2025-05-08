@@ -62,8 +62,8 @@ def checkout(request):
                 quantity=item['quantity']
             )
 
-        # Optional: send order confirmation email
-        # send_order_confirmation_email(order)
+        # ✅ Send email to customer
+        send_order_confirmation_email(order)
 
         request.session['cart'] = []
 
@@ -75,6 +75,7 @@ def checkout(request):
         'delivery_fee': delivery_fee,
         'grand_total': grand_total
     })
+
 
 def save_cart(request):
     if request.method == 'POST':
@@ -89,16 +90,19 @@ def send_order_confirmation_email(order):
         'address': order.address,
         'total_price': order.total_price,
         'phone': order.phone,
+        'items': order.orderitem_set.all()
     }
-    email_body = render_to_string('order_confirm.html', context)
+    subject = 'Order Confirmed - Selva’s Shop'
+    email_body = render_to_string('emails/order_confirm.html', context)
+
     send_mail(
-        'Order Confirmed - Your Order has been Placed Successfully!',
-        'Please see the attached confirmation for your order.',
+        subject,
+        'This is your order confirmation.',
         settings.DEFAULT_FROM_EMAIL,
         [order.email],
         fail_silently=False,
         html_message=email_body
     )
-
+    
 def order_confirm(request):
     return render(request, 'catalog/order_confirm.html')

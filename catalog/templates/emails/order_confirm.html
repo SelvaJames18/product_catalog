@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      color: #333;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #4CAF50;
+    }
+    .details p {
+      line-height: 1.6;
+    }
+    .order-summary {
+      margin-top: 20px;
+    }
+    .order-summary th, .order-summary td {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+    }
+    .order-summary th {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <h2>Thank you for your order, {{ name }}! 🎉</h2>
+    <div class="details">
+      <p><strong>Email:</strong> {{ email }}</p>
+      <p><strong>Address:</strong> {{ address }}</p>
+      <p><strong>Phone:</strong> {{ phone }}</p>
+    </div>
+
+    <h3>Order Summary</h3>
+    <table class="order-summary" width="100%" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>₹{{ item.price }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p><strong>Total Paid:</strong> ₹{{ total_price }}</p>
+
+    <p>We will begin processing your order shortly. You’ll receive another email once your order ships.</p>
+
+    <p>Thanks for shopping with Selva’s Shop!</p>
+  </div>
+</body>
+</html>
